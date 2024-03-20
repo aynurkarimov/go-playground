@@ -6,12 +6,17 @@ import (
 )
 
 func main() {
+	word := parseFlag()
+	translation := translate(word)
+
+	fmt.Println(translation)
+}
+
+func parseFlag() string {
 	word := flag.String("word", "no_translation", "Choose a word to translate")
 	flag.Parse()
 
-	translation := translate(*word)
-
-	fmt.Println(translation)
+	return *word
 }
 
 func translate(word string) string {
