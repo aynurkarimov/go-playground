@@ -21,11 +21,11 @@ func translate(word string) string {
 		"world": "мир",
 	}
 
-	translation := translations[word]
+	translation, ok := translations[word]
 
-	if translation == "" {
-		return "Translation is missing"
-	} else {
+	if ok {
 		return translation
+	} else {
+		return "Translation is missing"
 	}
 }
