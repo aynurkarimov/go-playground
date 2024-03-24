@@ -25,7 +25,9 @@ func main() {
 		os.Exit(0)
 	}
 
-	fmt.Println(products)
+	for _, product := range products {
+		fmt.Println(product.name, product.PricierThanTen())
+	}
 }
 
 func readCsvFile(filePath string) ([][]string, error) {
@@ -50,6 +52,10 @@ type Product struct {
 	price    int
 	amount   int
 	category string
+}
+
+func (product Product) PricierThanTen() bool {
+	return product.price > 10
 }
 
 func convertLinesToProducts(lines [][]string) ([]Product, error) {
