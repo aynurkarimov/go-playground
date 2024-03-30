@@ -35,17 +35,16 @@ func main() {
 	}
 }
 
-var selectFsActionQuestion = &survey.Question{
-	Name: "fsAction",
-	Prompt: &survey.Select{
-		Message: "Choose an action with a file:",
-		Options: []string{"Create", "Delete", "Move"},
-		Default: "Create",
-	},
-}
-
 func selectFsAction() string {
 	var fsActionAnswer string
+	var selectFsActionQuestion = &survey.Question{
+		Name: "fsAction",
+		Prompt: &survey.Select{
+			Message: "Choose an action with a file:",
+			Options: []string{"Create", "Delete", "Move"},
+			Default: "Create",
+		},
+	}
 
 	err := survey.AskOne(selectFsActionQuestion.Prompt, &fsActionAnswer)
 
@@ -58,17 +57,16 @@ func selectFsAction() string {
 	return fsActionAnswer
 }
 
-var fileNameQuestion = &survey.Question{
-	Name: "fileName",
-	Prompt: &survey.Input{
-		Message: "Name a file that should be created",
-	},
-	Validate:  survey.Required,
-	Transform: survey.ToLower,
-}
-
 func selectFileName() string {
 	var fileName string
+	var fileNameQuestion = &survey.Question{
+		Name: "fileName",
+		Prompt: &survey.Input{
+			Message: "Name a file that should be created",
+		},
+		Validate:  survey.Required,
+		Transform: survey.ToLower,
+	}
 
 	err := survey.AskOne(fileNameQuestion.Prompt, &fileName)
 
@@ -124,7 +122,6 @@ func currentDirectoryFiles(extension string) []string {
 
 func selectPathsForDeletion(suggestions []string) []string {
 	var paths []string
-
 	var pathsForDeletionQuestion = &survey.MultiSelect{
 		Message: "What files do you want to delete?",
 		Options: suggestions,
