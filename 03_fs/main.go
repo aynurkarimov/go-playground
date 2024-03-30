@@ -1,8 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -15,6 +18,16 @@ func main() {
 	case "Create":
 		fileName := selectFileName()
 		createTextFile(fileName, ".txt")
+
+	case "Delete":
+		files := currentDirectoryFiles(".txt")
+		selectedPaths := selectPathsForDeletion(files)
+
+		for _, path := range selectedPaths {
+			os.Remove(path)
+		}
+
+		fmt.Println("Success")
 
 	default:
 		fileName := selectFileName()
@@ -83,4 +96,47 @@ func createTextFile(fileName string, extension string) error {
 	defer file.Close()
 
 	return nil
+}
+
+func currentDirectoryFiles(extension string) []string {
+	var files []string
+
+	err := filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if strings.Contains(info.Name(), extension) {
+			files = append(files, path)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		fmt.Println(err.Error())
+
+		os.Exit(0)
+	}
+
+	return files
+}
+
+func selectPathsForDeletion(suggestions []string) []string {
+	var paths []string
+
+	var pathsForDeletionQuestion = &survey.MultiSelect{
+		Message: "What files do you want to delete?",
+		Options: suggestions,
+	}
+
+	survey.AskOne(pathsForDeletionQuestion, &paths)
+
+	if len(paths) == 0 {
+		fmt.Println(errors.New("please select at least one file"))
+
+		os.Exit(0)
+	}
+
+	return paths
 }
