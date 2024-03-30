@@ -127,7 +127,13 @@ func selectPathsForDeletion(suggestions []string) []string {
 		Options: suggestions,
 	}
 
-	survey.AskOne(pathsForDeletionQuestion, &paths)
+	err := survey.AskOne(pathsForDeletionQuestion, &paths)
+
+	if err != nil {
+		fmt.Println(err.Error())
+
+		os.Exit(0)
+	}
 
 	if len(paths) == 0 {
 		fmt.Println(errors.New("please select at least one file"))
